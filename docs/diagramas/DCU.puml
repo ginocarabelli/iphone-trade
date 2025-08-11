@@ -1,0 +1,46 @@
+@startuml
+left to right direction
+actor "Vendedor" as V
+actor "Administrador" as A
+
+rectangle "Sistema iPhoneTrade" {
+
+  usecase "Registrar dispositivo en stock" as UC1
+  usecase "Editar dispositivo" as UC2
+  usecase "Eliminar dispositivo" as UC3
+  usecase "Consultar stock" as UC4
+
+  usecase "Cotizar dispositivo entregado" as UC5
+  usecase "Registrar compra a cliente" as UC6
+  usecase "Registrar venta" as UC7
+  usecase "Registrar intercambio" as UC8
+
+  usecase "Generar reporte de ventas" as UC9
+  usecase "Generar reporte de compras" as UC10
+  usecase "Generar reporte de intercambios" as UC11
+  usecase "Ver resumen financiero" as UC12
+
+  V --> UC1
+  V --> UC2
+  V --> UC3
+  V --> UC4
+  V --> UC5
+  V --> UC6
+  V --> UC7
+  V --> UC8
+
+  A --> UC9
+  A --> UC10
+  A --> UC11
+  A --> UC12
+
+  A --> UC1
+  A --> UC2
+  A --> UC3
+  A --> UC4
+  A --> UC6
+  A --> UC7
+  A --> UC8
+}
+
+@enduml

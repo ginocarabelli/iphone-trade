@@ -1,0 +1,82 @@
+@startuml
+
+class Device {
+  - modelo: String
+  - almacenamiento: String
+  - color: String
+  - estadoFisico: EstadoFisico
+  - condicionBateria: int
+  - condicionGeneral: CondicionGeneral
+  - precioSugerido: BigDecimal
+  - fechaIngreso: LocalDate
+  - fechaSalida: LocalDate
+  - estadoStock: EstadoStock
+}
+
+enum EstadoFisico {
+  EXCELENTE
+  BUENO
+  REGULAR
+  MALO
+}
+
+enum CondicionGeneral {
+  NUEVO
+  SEMIUSADO
+  USADO
+}
+
+enum EstadoStock {
+  DISPONIBLE
+  VENDIDO
+  INTERCAMBIADO
+}
+
+class Transaccion {
+  - tipo: TipoTransaccion
+  - fecha: LocalDateTime
+  - total: BigDecimal
+  - formaPago: String
+}
+
+enum TipoTransaccion {
+  COMPRA
+  VENTA
+  INTERCAMBIO
+}
+
+class TransactionDevice {
+  - tipoMovimiento: TipoMovimiento
+  - valorUnitario: BigDecimal
+}
+
+enum TipoMovimiento {
+  ENTRADA
+  SALIDA
+}
+
+class Cotizacion {
+  - modelo: String
+  - almacenamiento: String
+  - color: String
+  - estadoFisico: EstadoFisico
+  - condicionBateria: int
+  - condicionGeneral: CondicionGeneral
+  - valorEstimado: BigDecimal
+  - fecha: LocalDate
+}
+
+' ===== RELACIONES =====
+
+Device "1" --> "0..*" TransactionDevice : está en
+Transaccion "1" --> "1..*" TransactionDevice : registra
+Transaccion "0..1" --> "0..1" Cotizacion : usa
+Device --> EstadoFisico
+Device --> CondicionGeneral
+Device --> EstadoStock
+Transaccion --> TipoTransaccion
+Cotizacion --> EstadoFisico
+Cotizacion --> CondicionGeneral
+TransactionDevice --> TipoMovimiento
+
+@enduml

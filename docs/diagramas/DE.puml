@@ -1,0 +1,45 @@
+@startuml
+actor Vendedor as V
+participant "Pantalla de Venta" as UI
+participant "Servicio de Cotización" as Cotizador
+participant "Servicio de Transacciones" as TxService
+participant "Repositorio de Dispositivos" as DeviceRepo
+participant "Repositorio de Transacciones" as TxRepo
+
+== Inicio de Venta ==
+
+V -> UI : Inicia venta
+UI -> DeviceRepo : Obtener stock disponible
+DeviceRepo --> UI : Lista de dispositivos
+
+V -> UI : Selecciona iPhone a vender
+V -> UI : Ingresa datos del iPhone entregado
+
+== Cotización del Dispositivo Entregado ==
+
+UI -> Cotizador : cotizar(dispositivo entregado)
+Cotizador -> DeviceRepo : obtener precios similares
+DeviceRepo --> Cotizador : precios promedio
+Cotizador --> UI : valor estimado
+
+UI -> V : Muestra valor de cotización
+
+== Confirmación de Venta ==
+
+V -> UI : Confirma venta
+
+UI -> TxService : registrarVentaConIntercambio(dispositivo entregado, dispositivo vendido, formaPago)
+
+== Registrar Entrada y Salida ==
+
+TxService -> DeviceRepo : guardar(dispositivo entregado)
+TxService -> DeviceRepo : actualizarEstado(dispositivo vendido, VENDIDO)
+
+TxService -> TxRepo : guardar(transacción)
+TxRepo --> TxService : transacción registrada
+
+TxService --> UI : Venta registrada
+
+UI -> V : Mostrar ticket/resumen
+
+@enduml
