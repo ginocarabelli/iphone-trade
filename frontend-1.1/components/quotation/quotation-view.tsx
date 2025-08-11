@@ -32,7 +32,13 @@ interface QuotationResult {
   dispositivo: QuotationData
 }
 
-const DEFAULT_CONFIG = {
+interface QuotationConfig {
+  estadoMultipliers: Record<string, number>
+  condicionMultipliers: Record<string, number>
+  minBatteryMultiplier: number
+}
+
+const DEFAULT_CONFIG: QuotationConfig = {
   estadoMultipliers: {
     EXCELENTE: 1.0,
     BUENO: 0.85,
@@ -63,18 +69,28 @@ export function QuotationView() {
   const { toast } = useToast()
 
   const [configModalOpen, setConfigModalOpen] = useState(false)
-  const [quotationConfig, setQuotationConfig] = useState(() => {
-    const saved = localStorage.getItem("quotationConfig")
-    return saved ? JSON.parse(saved) : DEFAULT_CONFIG
-  })
+  const [quotationConfig, setQuotationConfig] = useState<QuotationConfig>(DEFAULT_CONFIG)
 
   useEffect(() => {
     setDeviceModels(devices)
   }, [])
 
   useEffect(() => {
+    const savedConfig = localStorage.getItem("quotationConfig")
+    if (savedConfig) {
+      try {
+        const parsedConfig = JSON.parse(savedConfig) as QuotationConfig
+        setQuotationConfig(parsedConfig)
+      } catch (error) {
+        console.error("Error parsing quotationConfig from localStorage", error)
+      }
+    }
+  }, [])
+
+  useEffect(() => {
     if (!formData.modelo) {
       setAlmacenamientosDisponibles([])
+      setFormData((prev) => ({ ...prev, almacenamiento: "" })) // reset almacenamiento si modelo se borra
       return
     }
 
@@ -87,7 +103,7 @@ export function QuotationView() {
     ).sort()
 
     setAlmacenamientosDisponibles(disponibles)
-    setFormData((prev) => ({ ...prev, almacenamiento: "" }))
+    setFormData((prev) => ({ ...prev, almacenamiento: "" })) // reset almacenamiento al cambiar modelo
   }, [formData.modelo, deviceModels])
 
   const isFormComplete = Object.values(formData).every((value) =>
@@ -106,7 +122,7 @@ export function QuotationView() {
     setQuotationResult(null)
   }
 
-  const calculateQuotation = async (e: React.FormEvent) => {
+  const calculateQuotation = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
 
     if (!isFormComplete) {
@@ -130,10 +146,10 @@ export function QuotationView() {
     const basePrice = foundModel ? foundModel.basePriceUsd : DEFAULT_BASE_PRICE
 
     const estadoMultiplier =
-        quotationConfig.estadoMultipliers[formData.estadoFisico?.toUpperCase()] ?? 0.85
+        quotationConfig.estadoMultipliers[formData.estadoFisico.toUpperCase()] ?? 0.85
 
     const condicionMultiplier =
-        quotationConfig.condicionMultipliers[formData.condicionGeneral?.toUpperCase()] ?? 0.85
+        quotationConfig.condicionMultipliers[formData.condicionGeneral.toUpperCase()] ?? 0.85
 
     const batteryMultiplier = Math.max(
         formData.condicionBateria / 100,
