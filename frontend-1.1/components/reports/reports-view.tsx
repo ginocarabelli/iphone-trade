@@ -55,7 +55,6 @@ export function ReportsView() {
     }
   }
 
-
   const exportToPDF = () => {
     // Simulación de exportación a PDF
     toast({

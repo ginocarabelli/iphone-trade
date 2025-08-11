@@ -14,8 +14,6 @@ import java.util.List;
 @CrossOrigin(origins = "*")
 public class TransactionController {
 
-    // TODO Actualizar el stock cuando se haga una transacción de Compra-Venta-Intercambio
-
     private final TransactionService service;
 
     @PostMapping

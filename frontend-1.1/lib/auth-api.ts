@@ -9,16 +9,25 @@ export interface RegisterPayload {
     role: "ADMIN" | "VENDEDOR"
 }
 
-export async function registerUser(payload: RegisterPayload): Promise<void> {
-    const response = await fetch("http://localhost:8080/auth/register", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-    })
+export async function registerUser(payload: RegisterPayload) {
+    try {
+        const response = await fetch("http://localhost:8080/auth/register", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload),
+        })
 
-    if (!response.ok) {
-        const message = await response.text()
-        throw new Error(message || "Registro fallido")
+        if (!response.ok) {
+            const message = await response.text()
+            throw new Error(message || "Registro fallido")
+        }
+        const data = await response.json()
+
+        return data
+
+    }
+    catch (error) {
+        console.error(error)
     }
 }
 

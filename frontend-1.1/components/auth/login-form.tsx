@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import {useEffect, useState} from "react"
 import { useRouter } from "next/navigation"
 import Cookies from "js-cookie"
 import { Button } from "@/components/ui/button"
@@ -17,6 +17,13 @@ export function LoginForm() {
   const [isLoading, setIsLoading] = useState(false)
   const { toast } = useToast()
   const router = useRouter()
+
+  useEffect(() => {
+    if(Cookies.get("token")) {
+      setIsLoading(true)
+      router.push("/dashboard")
+    }
+  })
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()

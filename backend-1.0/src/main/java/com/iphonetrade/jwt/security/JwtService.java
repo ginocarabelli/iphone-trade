@@ -3,6 +3,7 @@ package com.iphonetrade.jwt.security;
 import com.iphonetrade.jwt.model.Role;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.security.Key;
@@ -11,12 +12,15 @@ import java.util.Date;
 @Service
 public class JwtService {
 
-    // Clave secreta (en producción debe estar en variables de entorno)
-    private static final String SECRET_KEY = "TuClaveMuyLargaParaFirmarJWT1234567890!";
+    @Value("${jwt.secret}")
+    private String secretKey;
 
-    private final Key key = Keys.hmacShaKeyFor(SECRET_KEY.getBytes());
+    private final long jwtExpirationMs = 1000 * 60 * 60 * 24;
 
-    private final long jwtExpirationMs = 1000 * 60 * 60 * 24; // 24 horas
+    private Key getSigningKey() {
+        return Keys.hmacShaKeyFor(secretKey.getBytes());
+    }
+
     public String generateToken(Long id, String email, Role role) {
         return Jwts.builder()
                 .setId(id.toString())
@@ -24,10 +28,9 @@ public class JwtService {
                 .claim("role", role)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + jwtExpirationMs))
-                .signWith(key, SignatureAlgorithm.HS256)
+                .signWith(getSigningKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
-
 
     public boolean isTokenValid(String token, String email) {
         final String username = extractUsername(token);
@@ -44,7 +47,7 @@ public class JwtService {
 
     private Claims extractClaims(String token) {
         return Jwts.parserBuilder()
-                .setSigningKey(key)
+                .setSigningKey(getSigningKey())
                 .build()
                 .parseClaimsJws(token)
                 .getBody();

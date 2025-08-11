@@ -7,6 +7,9 @@ import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { useToast } from "@/hooks/use-toast"
 import {registerUser} from "@/lib/auth-api";
+import Cookies from "js-cookie";
+import {router} from "next/client";
+import {useRouter} from "next/navigation";
 
 export function RegisterForm({ onRegistered }: { onRegistered?: () => void }) {
     const [fullName, setFullName] = useState("")
@@ -17,27 +20,38 @@ export function RegisterForm({ onRegistered }: { onRegistered?: () => void }) {
     const [city, setCity] = useState("")
     const [isLoading, setIsLoading] = useState(false)
     const { toast } = useToast()
+    const router = useRouter()
 
     const handleRegister = async (e: React.FormEvent) => {
         e.preventDefault()
         setIsLoading(true)
 
         try {
-            await registerUser({
+            const res = await registerUser({
                 fullName,
                 email,
                 password,
                 phoneNumber: parseInt(phoneNumber),
                 businessAddress,
                 city,
-                role: "ADMIN",
+                role: "ADMIN"
             })
 
-            toast({
-                title: "Cuenta creada",
-                description: "Ahora podés iniciar sesión",
-            })
-            onRegistered?.()
+            if (res?.accessToken) {
+                setIsLoading(true)
+                Cookies.set("token", res.accessToken, {
+                    expires: 1,
+                    secure: true,
+                    sameSite: "strict",
+                })
+                toast({
+                    title: "Cuenta creada",
+                    description: "Ahora podés iniciar sesión",
+                })
+                onRegistered?.()
+                router.push("/dashboard")
+            }
+
         } catch (err: any) {
             toast({
                 title: "Error",
