@@ -22,9 +22,6 @@ export default function HomePage() {
             el mercado de iPhones usados.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button size="lg" className="text-lg px-8 py-3" asChild>
-              <Link href="/register">Comenzar Gratis</Link>
-            </Button>
             <Button size="lg" variant="outline" className="text-lg px-8 py-3 bg-transparent" asChild>
               <Link href="/quotation">Ver Demo</Link>
             </Button>
@@ -194,8 +191,8 @@ export default function HomePage() {
                 <Smartphone className="h-24 w-24 text-blue-600 mx-auto mb-6" />
                 <h3 className="text-2xl font-bold text-gray-900 mb-4">Comienza hoy mismo</h3>
                 <p className="text-gray-600 mb-6">Únete a cientos de negocios que ya están maximizando sus ganancias</p>
-                <Button size="lg" className="w-full" asChild>
-                  <Link href="/auth">Crear Cuenta Gratis</Link>
+                <Button size="lg" className="w-full" disabled={true}>
+                  <Link href="/auth">Crear Cuenta Gratis (muy pronto)</Link>
                 </Button>
               </div>
             </div>
@@ -222,18 +219,13 @@ export default function HomePage() {
               <h4 className="font-semibold mb-4">Empresa</h4>
               <ul className="space-y-2 text-gray-400">
                 <li>
-                  <Link href="/about" className="hover:text-white transition-colors">
+                  <Link href="https://github.com/ginocarabelli/iphone-trade" className="hover:text-white transition-colors">
                     Acerca de
                   </Link>
                 </li>
                 <li>
-                  <Link href="/contact" className="hover:text-white transition-colors">
+                  <Link href="https://www.instagram.com/gino_carabelli/ " className="hover:text-white transition-colors">
                     Contacto
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/support" className="hover:text-white transition-colors">
-                    Soporte
                   </Link>
                 </li>
               </ul>

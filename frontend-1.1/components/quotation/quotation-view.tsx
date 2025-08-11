@@ -12,7 +12,7 @@ import {Calculator, Settings2, Smartphone} from "lucide-react"
 import { useToast } from "@/hooks/use-toast"
 import Image from "next/image"
 import {colores, condicionesGenerales, estadosFisicos} from "@/lib/options";
-import {fetchDeviceModels} from "@/lib/inventory-api";
+import devices from "@/utils/devices.json"
 import {DeviceModelPrice} from "@/lib/types";
 import {QuotationConfigModal} from "@/utils/quotation-config-modal";
 
@@ -69,7 +69,7 @@ export function QuotationView() {
   })
 
   useEffect(() => {
-    fetchDeviceModels().then(setDeviceModels)
+    setDeviceModels(devices)
   }, [])
 
   useEffect(() => {

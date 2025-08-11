@@ -38,15 +38,6 @@ export default function Navbar() {
                                 <Link href="/quotation" className="text-gray-700 hover:text-blue-600">
                                     Cotizaciones
                                 </Link>
-                                <Link href="/auth" className="text-gray-700 hover:text-blue-600">
-                                    Iniciar Sesión
-                                </Link>
-                                <Link
-                                    href="/register"
-                                    className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition"
-                                >
-                                    Registrarse
-                                </Link>
                             </>
                         ) : (
                             <>
